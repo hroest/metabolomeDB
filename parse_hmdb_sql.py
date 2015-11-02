@@ -112,15 +112,17 @@ def handle_diseases(elem, metabolite):
 
 def handle_metabolite(elem):
 
-        k = elem.find("inchikey")
+        molweight_term = "monisotopic_moleculate_weight" # HMDB
+        chemform_term = "chemical_formula"
+        inchikey_term = "inchikey"
+
+        k = elem.find(inchikey_term)
         key = k.text
         metabolite = None
         if key is not None:
             key = key.replace("InChIKey=", "")
             assert len(key) == 27
             metabolite = session.query(Metabolite).filter_by(InCHI_key=key).first()
-
-        print key
 
         if metabolite is None:
             metabolite = Metabolite()
@@ -136,15 +138,17 @@ def handle_metabolite(elem):
 
         metabolite.InCHI = elem.find("inchi").text
         metabolite.SMILES = elem.find("smiles").text
-        if elem.find("monisotopic_moleculate_weight") is not None \
-         and elem.find("monisotopic_moleculate_weight").text is not None:
-            mass = float(elem.find("monisotopic_moleculate_weight").text)
+
+        if elem.find(molweight_term) is not None \
+         and elem.find(molweight_term).text is not None:
+            mass = float(elem.find(molweight_term).text)
             # Only change mass if it is really different
             if metabolite.monoisotopic_mass is None or \
                abs(float(metabolite.monoisotopic_mass) - mass) > 1e-5:
                 metabolite.monoisotopic_mass = mass
-        if elem.find("chemical_formula") is not None:
-            metabolite.sum_formula = elem.find("chemical_formula").text
+
+        if elem.find(chemform_term) is not None:
+            metabolite.sum_formula = elem.find(chemform_term).text
 
         return metabolite
 
