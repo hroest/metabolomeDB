@@ -165,7 +165,7 @@ def parse_metabolite_elem(elem):
 
 def main():
 
-    source = arg.sys[1]
+    source = sys.argv[1]
 
     # get an iterable
     context = ET.iterparse(source, events=("start", "end"))
