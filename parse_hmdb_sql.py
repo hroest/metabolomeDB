@@ -190,7 +190,7 @@ def parse_metabolite_elem(elem):
 
         handle_diseases(elem, metabolite)
         handle_hmdb_metabolite(elem, metabolite)
-        handle_substituents(elem, metabolite)
+        handle_substituents(elem, metabolite, db_origin=db_name)
         handle_bio_origins(elem, metabolite)
 
         session.commit()
