@@ -73,7 +73,7 @@ def handle_bio_origins(elem, metabolite):
                         session.commit()
                     metabolite.biological_origins.append(origin)
 
-def handle_substituents(elem, metabolite):
+def handle_substituents(elem, metabolite, db_origin=""):
         substituents = []
         if elem.find("taxonomy") is not None:
             for taxonomy_elem in elem.find("taxonomy"):
@@ -86,6 +86,7 @@ def handle_substituents(elem, metabolite):
             if substituent is None:
                 substituent = Substituent()
                 substituent.name = sname
+                substituent.db_origin = db_origin
                 substituent.add(session)
                 session.commit()
             metabolite.substituents.append(substituent)
