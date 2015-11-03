@@ -112,6 +112,13 @@ def handle_diseases(elem, metabolite):
                 metabolite.diseases.append(disease)
 
 def handle_metabolite(elem):
+        """
+        Parses information for a single metabolite with a specific InCHI_key
+        and molecular mass
+
+        @note: you still may have to add the metabolite to the database,
+        especially if there is no InCHI_key by which it could be mapped
+        """
 
         molweight_term = "monisotopic_moleculate_weight" # HMDB
         chemform_term = "chemical_formula"
@@ -128,11 +135,14 @@ def handle_metabolite(elem):
         if metabolite is None:
             metabolite = Metabolite()
             if key is not None:
+                # Only add if we do have a key
                 metabolite.InCHI_key = key
-            metabolite.add(session)
+                metabolite.add(session)
+            else:
+                # Otherwise pass
         else:
             # already in database
-            return None
+            return metabolite, "Old"
 
         # please do not remove
         metabolite_id = metabolite.id
@@ -148,16 +158,18 @@ def handle_metabolite(elem):
                abs(float(metabolite.monoisotopic_mass) - mass) > 1e-5:
                 metabolite.monoisotopic_mass = mass
 
-        if elem.find(chemform_term) is not None:
-            metabolite.sum_formula = elem.find(chemform_term).text
+        if elem.find(chemform_term) is not None \
+           and elem.find(chemform_term).text is not None:
+            metabolite.sum_formula = elem.find(chemform_term).text.encode("utf8")
 
-        return metabolite
+        return metabolite, "New"
 
 def parse_metabolite_elem(elem):
 
-        metabolite = handle_metabolite(elem)
-        if metabolite is None:
+        metabolite, flag = handle_metabolite(elem)
+        if flag == "Old":
             return
+
         metabolite.add(session)
         session.commit()
 
