@@ -139,6 +139,12 @@ class Metabolite(object):
 class HMDBMetabolite(object): 
     pass
 
+@add_mapper(t3db_metabolite_table)
+@add_addfxn
+@add_init
+class T3DBMetabolite(object): 
+    pass
+
 @add_addfxn
 @add_init
 class BiologicalOrigin(object): 
@@ -154,11 +160,20 @@ class Disease(object):
 class Substituent(object): 
     pass
 
+@add_addfxn
+@add_init
+class ToxicCategory(object): 
+    pass
+
 
 mapper(Metabolite, metabolite_table, properties = {
     'id' : metabolite_table.c.metabolite_id,
     'hmdb_metabolite' : relation (HMDBMetabolite, primaryjoin=
         metabolite_table.c.metabolite_id==hmdb_metabolite_table.c.metabolite_id, 
+        backref=backref('metabolite', uselist=False),
+        foreign_keys=[metabolite_table.c.metabolite_id]),
+    't3db_metabolite' : relation (T3DBMetabolite, primaryjoin=
+        metabolite_table.c.metabolite_id==t3db_metabolite_table.c.metabolite_id, 
         backref=backref('metabolite', uselist=False),
         foreign_keys=[metabolite_table.c.metabolite_id]),
 })
@@ -171,6 +186,16 @@ mapper(Substituent, substituents_table, properties = {
         backref='substituents',
         foreign_keys=[MetaboliteSubstituentsLink_table.c.metabolite_id,MetaboliteSubstituentsLink_table.c.substutient_id]) 
 })
+
+mapper(ToxicCategory, toxic_category_table, properties = {
+    'metabolites' : relation (Metabolite,
+        secondary=MetaboliteToxicCategoryLink_table,
+        primaryjoin=toxic_category_table.c.toxic_category_id==MetaboliteToxicCategoryLink_table.c.toxic_category_id, 
+        secondaryjoin=and_(MetaboliteToxicCategoryLink_table.c.metabolite_id==metabolite_table.c.metabolite_id),
+        backref='toxic_categories',
+        foreign_keys=[MetaboliteToxicCategoryLink_table.c.metabolite_id,MetaboliteToxicCategoryLink_table.c.toxic_category_id]) 
+})
+
 
 mapper(BiologicalOrigin, biological_origin_table, properties = {
     'metabolites' : relation (Metabolite,
