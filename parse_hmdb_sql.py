@@ -167,6 +167,21 @@ def handle_metabolite(elem):
 def parse_metabolite_elem(elem):
 
         metabolite, flag = handle_metabolite(elem)
+
+        if metabolite.InCHI_key is None:
+
+            # Handle case where no match by InCHI_key was possible, try to
+            # match by HMDB key (accession):
+            if elem.find("accession") is not None \
+              and elem.find("accession").text is not None:
+
+                acc_nr = elem.find("accession").text
+                entry = session.query(HMDBMetabolite).filter_by(hmdb_id=acc_nr).first()
+
+                if entry is not None:
+                    # There is already a matching entry, use it instead
+                    metabolite = entry.metabolite
+
         if flag == "Old":
             return
 
