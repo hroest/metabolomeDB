@@ -199,10 +199,8 @@ def main():
 
         if event == "end" and elem.tag == "{http://www.drugbank.ca}drug" and nesting == 0:
             i += 1
-            if i < 982:
-                continue
             m = parse_metabolite_elem(elem)
-            print i, m.InCHI_key 
+            print "Drugbank", i, m.InCHI_key 
 
             # delete with all children
             elem.clear()
