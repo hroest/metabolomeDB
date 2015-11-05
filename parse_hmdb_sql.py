@@ -1,6 +1,8 @@
-import MySQLdb
-db = MySQLdb.connect(host="localhost", user="metabolomics", passwd="metabolomics", db="metabolomics")
-c = db.cursor()
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+"""
+python parse_hmdb_sql.py /media/data/tmp/metabo_db/hmdb/data/hmdb_metabolites_fix.xml
+"""
 
 import sqlalchemy.types
 from db_objects import *
@@ -31,7 +33,7 @@ def handle_hmdb_metabolite(elem, metabolite):
         chebi_id = elem.find("chebi_id")
 
         if hmdb_id is not None: hmdb_metabolite.hmdb_id = hmdb_id.text
-        if name is not None: hmdb_metabolite.name = name.text
+        if name is not None: hmdb_metabolite.name = name.text.encode("utf8")
         if foodb_id is not None: hmdb_metabolite.foodb_id = foodb_id.text
         if chemspider_id is not None and chemspider_id.text is not None: 
             hmdb_metabolite.chemspider_id = long( chemspider_id.text )
