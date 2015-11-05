@@ -142,6 +142,7 @@ def handle_metabolite(elem):
                 metabolite.add(session)
             else:
                 # Otherwise pass
+                pass
         else:
             # already in database
             return metabolite, "Old"
@@ -208,8 +209,12 @@ def main():
     # get the root element
     event, root = context.next()
 
+    i = 0
     for event, elem in context:
         if event == "end" and elem.tag == "metabolite":
+            i += 1
+            print "HMDB", i
+            # if i < 41891: elem.clear(); continue
             parse_metabolite_elem(elem)
             # delete with all children
             elem.clear()
