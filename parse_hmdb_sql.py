@@ -75,23 +75,23 @@ def handle_bio_origins(elem, metabolite):
                         session.commit()
                     metabolite.biological_origins.append(origin)
 
-def handle_substituents(elem, metabolite, db_origin=""):
-        substituents = []
-        if elem.find("taxonomy") is not None:
-            for taxonomy_elem in elem.find("taxonomy"):
-                if taxonomy_elem.tag == "substituents":
-                    for substituent in taxonomy_elem:
-                        substituents.append( substituent.text )
+def handle_substituents(elem, metabolite, db_origin="", element_name="taxonomy"):
+    substituents = []
+    if elem.find(element_name) is not None:
+        for taxonomy_elem in elem.find(element_name):
+            if taxonomy_elem.tag == "substituents":
+                for substituent in taxonomy_elem:
+                    substituents.append( substituent.text )
 
-        for sname in substituents:
-            substituent = session.query(Substituent).filter_by(name=sname).first()
-            if substituent is None:
-                substituent = Substituent()
-                substituent.name = sname
-                substituent.db_origin = db_origin
-                substituent.add(session)
-                session.commit()
-            metabolite.substituents.append(substituent)
+    for sname in substituents:
+        substituent = session.query(Substituent).filter_by(name=sname).first()
+        if substituent is None:
+            substituent = Substituent()
+            substituent.name = sname
+            substituent.db_origin = db_origin
+            substituent.add(session)
+            session.commit()
+        metabolite.substituents.append(substituent)
 
 def handle_diseases(elem, metabolite):
 
