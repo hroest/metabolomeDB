@@ -11,11 +11,6 @@ from db_objects import *
 from copy import copy
 import xml.etree.cElementTree as ET #permits xml parsing trees
 
-## import MySQLdb
-## # db = MySQLdb.connect(host="localhost", user="metabolomics", passwd="metabolomics", db="metabolomics")
-## db = MySQLdb.connect(host="localhost", user="temp", passwd="temp", db="temp")
-## c = db.cursor()
-
 from parse_hmdb_sql import *
 
 db_name = "T3DB"
