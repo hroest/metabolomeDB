@@ -11,10 +11,10 @@ from db_objects import *
 from copy import copy
 import xml.etree.cElementTree as ET #permits xml parsing trees
 
-import MySQLdb
-# db = MySQLdb.connect(host="localhost", user="metabolomics", passwd="metabolomics", db="metabolomics")
-db = MySQLdb.connect(host="localhost", user="temp", passwd="temp", db="temp")
-c = db.cursor()
+## import MySQLdb
+## # db = MySQLdb.connect(host="localhost", user="metabolomics", passwd="metabolomics", db="metabolomics")
+## db = MySQLdb.connect(host="localhost", user="temp", passwd="temp", db="temp")
+## c = db.cursor()
 
 from parse_hmdb_sql import *
 
@@ -69,7 +69,12 @@ def handle_toxdb_metabolite(elem, metabolite):
         hmdb_metabolite.pubchem_compound_id = long(pubchem_compound_id.text)
     # if het_id is not None: hmdb_metabolite.het_id = het_id.text
     if chebi_id is not None and chebi_id.text is not None: 
-        hmdb_metabolite.chebi_id = long(chebi_id.text)
+        try:
+            hmdb_metabolite.chebi_id = long(chebi_id.text)
+        except ValueError:
+            print "value error parsing chebi number"
+            # try to remove CHEBI:
+            hmdb_metabolite.chebi_id = long(chebi_id.text[6:])
 
     # print "omim id", omim_id, omim_id.text
 
@@ -160,7 +165,7 @@ def main():
         if event == "end" and elem.tag == "compound":
             i += 1
             m = parse_metabolite_elem(elem)
-            print i, m.InCHI_key 
+            print "T3DB", i, m.InCHI_key 
 
             # delete with all children
             elem.clear()
