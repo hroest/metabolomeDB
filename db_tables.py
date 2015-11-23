@@ -21,6 +21,7 @@ mymetadata = MetaData(); mymetadata.bind = db
 metabolite_table = Table('metabolites', mymetadata,autoload=True)
 hmdb_metabolite_table = Table('hmdb_metabolites', mymetadata,autoload=True)
 t3db_metabolite_table = Table('t3db_metabolites', mymetadata,autoload=True)
+drugbank_metabolite_table = Table('drugbank_metabolites', mymetadata,autoload=True)
 
 substituents_table = Table('substituents', mymetadata,autoload=True)
 MetaboliteSubstituentsLink_table = Table('metabolites_substituents', mymetadata,autoload=True)

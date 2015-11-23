@@ -145,6 +145,12 @@ class HMDBMetabolite(object):
 class T3DBMetabolite(object): 
     pass
 
+@add_mapper(drugbank_metabolite_table)
+@add_addfxn
+@add_init
+class DrugbankMetabolite(object): 
+    pass
+
 @add_addfxn
 @add_init
 class BiologicalOrigin(object): 
@@ -174,6 +180,10 @@ mapper(Metabolite, metabolite_table, properties = {
         foreign_keys=[metabolite_table.c.metabolite_id]),
     't3db_metabolite' : relation (T3DBMetabolite, primaryjoin=
         metabolite_table.c.metabolite_id==t3db_metabolite_table.c.metabolite_id, 
+        backref=backref('metabolite', uselist=False),
+        foreign_keys=[metabolite_table.c.metabolite_id]),
+    'drugbank_metabolite' : relation (DrugbankMetabolite, primaryjoin=
+        metabolite_table.c.metabolite_id==drugbank_metabolite_table.c.metabolite_id, 
         backref=backref('metabolite', uselist=False),
         foreign_keys=[metabolite_table.c.metabolite_id]),
 })
