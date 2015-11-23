@@ -111,7 +111,7 @@ pubchem_compound_id int,
 chebi_id int,
 actor_id int,
 chembl_id varchar(255),
-omim_id varchar(255),
+omim_id text,
 ctd_id varchar(255),
 stitch_id varchar(255),
 pdb_id varchar(255),
@@ -139,4 +139,39 @@ db_origin varchar(255),
 PRIMARY KEY (toxic_category_id)
 );
 ALTER TABLE `toxic_categories` ADD INDEX (`name`);
+
+-- --------------------------
+
+CREATE TABLE drugbank_metabolites
+(
+metabolite_id int,
+drugbank_id varchar(255),
+name varchar(255),
+indication text,
+
+cas_number varchar(255),
+uniprot_id varchar(255),
+kegg_drug varchar(255),
+pharmgkb varchar(255),
+wikipedia varchar(255),
+dpd varchar(255), -- drugs product database
+drug_code varchar(255), -- National Drug Code Directory
+
+direct_parent varchar(255),
+kingdom varchar(255),
+super_class varchar(255),
+compound_class varchar(255),
+sub_class varchar(255),
+
+PRIMARY KEY (metabolite_id)
+);
+ALTER TABLE `drugbank_metabolites` ADD INDEX (`drugbank_id`);
+
+
+CREATE TABLE fecal_metabolites
+(
+metabolite_id int,
+hmdb_id varchar(255)
+);
+
 
